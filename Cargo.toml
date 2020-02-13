@@ -1,0 +1,18 @@
+[package]
+name = "dino_park_guard"
+version = "0.0.1"
+authors = ["Florian Merz <flomerz@gmail.com>"]
+edition = "2018"
+license = "MIT"
+repository = "https://github.com/mozilla-iam/dino-park-guard"
+readme = "README.md"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+dino_park_gate = { git = "https://github.com/mozilla-iam/dino-park-gate", tag = "0.4.0", version = "0.4.0" }
+dino_park_trust = { git = "https://github.com/mozilla-iam/dino-park-trust", tag = "0.0.4", version = "0.0.4" }
+syn = { version = "1.0", features = ["full"] }
+quote = "1.0"
+failure = "0.1"
