@@ -2,10 +2,10 @@ extern crate proc_macro;
 
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::parse_quote;
 use syn::parse_macro_input;
-use syn::NestedMeta;
+use syn::parse_quote;
 use syn::Meta;
+use syn::NestedMeta;
 
 #[proc_macro_attribute]
 pub fn guard(args: TokenStream, input: TokenStream) -> TokenStream {
@@ -28,15 +28,15 @@ pub fn guard(args: TokenStream, input: TokenStream) -> TokenStream {
             } else {
                 panic!();
             }
-        },
+        }
         _ => quote!(GroupsTrust::None),
     };
     let mut function = parse_macro_input!(input as syn::ItemFn);
-    let arg: syn::FnArg = parse_quote!(__sau: ::dino_park_gate::scope::ScopeAndUser); 
+    let arg: syn::FnArg = parse_quote!(__sau: ::dino_park_gate::scope::ScopeAndUser);
     function.sig.inputs.push(arg);
     let block = function.block;
     let b = parse_quote! {
-        { 
+        {
             {
                 use ::dino_park_trust::Trust;
                 use ::dino_park_trust::GroupsTrust;
