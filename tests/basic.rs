@@ -18,7 +18,7 @@ fn something_groups() -> Result<(), Error> {
     Ok(())
 }
 
-#[guard(Staff, None, High)]
+#[guard(Staff, _(), High)]
 fn something_aal() -> Result<(), Error> {
     Ok(())
 }

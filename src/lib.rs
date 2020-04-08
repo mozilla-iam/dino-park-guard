@@ -14,7 +14,14 @@ pub fn guard(args: TokenStream, input: TokenStream) -> TokenStream {
     let scope = match args.get(0) {
         Some(NestedMeta::Meta(Meta::Path(x))) => {
             if let Some(scope) = x.get_ident() {
-                quote!(Trust::#scope)
+                Some(quote! {
+                    use ::dino_park_trust::Trust;
+                    use ::dino_park_trust::TrustError;
+
+                    if __sau.scope < Trust::#scope {
+                        return Err(TrustError::TrustLevelToLow.into());
+                    }
+                })
             } else {
                 panic!();
             }
@@ -24,23 +31,52 @@ pub fn guard(args: TokenStream, input: TokenStream) -> TokenStream {
     let groups_scope = match args.get(1) {
         Some(NestedMeta::Meta(Meta::Path(x))) => {
             if let Some(groups_scope) = x.get_ident() {
-                quote!(GroupsTrust::#groups_scope)
+                Some(quote! {
+                use ::dino_park_trust::GroupsTrust;
+                use ::dino_park_trust::GroupsTrustError;
+
+                if __sau.groups_scope < GroupsTrust::#groups_scope {
+                    return Err(GroupsTrustError::GroupsTrustLevelToLow.into());
+                }
+                })
             } else {
                 panic!();
             }
         }
-        _ => quote!(GroupsTrust::None),
+        _ => None,
     };
     let aa_level = match args.get(2) {
         Some(NestedMeta::Meta(Meta::Path(x))) => {
             if let Some(aa_level) = x.get_ident() {
-                quote!(AALevel::#aa_level)
+                Some(quote! {
+                    use ::dino_park_trust::AALevel;
+                    use ::dino_park_trust::AALevelError;
+
+                    if __sau.aa_level < AALevel::#aa_level {
+                        return Err(AALevelError::AALevelToLow.into());
+                    }
+                })
             } else {
                 panic!();
             }
         }
-        _ => quote!(AALevel::Unknown),
+        _ => None,
     };
+
+    let mut checks = quote! { #scope };
+    if let Some(groups_scope) = groups_scope {
+        checks = quote! {
+            #checks
+            #groups_scope
+        };
+    }
+    if let Some(aa_level) = aa_level {
+        checks = quote! {
+            #checks
+            #aa_level
+        };
+    }
+
     let mut function = parse_macro_input!(input as syn::ItemFn);
     let arg: syn::FnArg = parse_quote!(__sau: ::dino_park_gate::scope::ScopeAndUser);
     function.sig.inputs.push(arg);
@@ -48,25 +84,8 @@ pub fn guard(args: TokenStream, input: TokenStream) -> TokenStream {
     let b = parse_quote! {
         {
             {
-                use ::dino_park_trust::AALevel;
-                use ::dino_park_trust::AALevelError;
-                use ::dino_park_trust::Trust;
-                use ::dino_park_trust::GroupsTrust;
-                use ::dino_park_trust::TrustError;
-                use ::dino_park_trust::GroupsTrustError;
                 use ::std::convert::TryFrom;
-
-                if __sau.scope < #scope {
-                    return Err(TrustError::TrustLevelToLow.into());
-                }
-
-                if __sau.groups_scope < #groups_scope {
-                    return Err(GroupsTrustError::GroupsTrustLevelToLow.into());
-                }
-
-                if __sau.aa_level < #aa_level {
-                    return Err(AALevelError::AALevelToLow.into());
-                }
+                #checks
 
             }
             #block
