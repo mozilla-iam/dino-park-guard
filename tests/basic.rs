@@ -1,12 +1,12 @@
 #[macro_use]
 extern crate dino_park_guard;
+use anyhow::Error;
 use dino_park_trust::AALevel;
 use dino_park_trust::AALevelError;
 use dino_park_trust::GroupsTrust;
 use dino_park_trust::GroupsTrustError;
 use dino_park_trust::Trust;
 use dino_park_trust::TrustError;
-use failure::Error;
 
 #[guard(Staff)]
 fn something(b: String) -> Result<String, Error> {
