@@ -12,7 +12,7 @@ proc-macro = true
 
 [dependencies]
 dino_park_gate = { git = "https://github.com/mozilla-iam/dino-park-gate", branch = "0.9.1", version = "0.9.1" }
-dino_park_trust = { git = "https://github.com/mozilla-iam/dino-park-trust", branch = "0.1", version = "0.1" }
+dino_park_trust = { git = "https://github.com/mozilla-iam/dino-park-trust", branch = "0.3", version = "0.3" }
 syn = { version = "1.0", features = ["full"] }
 quote = "1.0"
 
