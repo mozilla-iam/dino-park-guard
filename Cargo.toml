@@ -1,6 +1,6 @@
 [package]
 name = "dino_park_guard"
-version = "0.3.2"
+version = "0.3.3"
 authors = ["Florian Merz <me@fiji-flo.de>"]
 edition = "2018"
 license = "MIT"
