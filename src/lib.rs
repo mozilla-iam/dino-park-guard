@@ -11,7 +11,7 @@ use syn::NestedMeta;
 pub fn guard(args: TokenStream, input: TokenStream) -> TokenStream {
     let args = parse_macro_input!(args as syn::AttributeArgs);
     assert!(!args.is_empty() && args.len() < 4);
-    let scope = match args.get(0) {
+    let scope = match args.first() {
         Some(NestedMeta::Meta(Meta::Path(x))) => {
             if let Some(scope) = x.get_ident() {
                 Some(quote! {
